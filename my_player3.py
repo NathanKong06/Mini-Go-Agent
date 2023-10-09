@@ -336,24 +336,24 @@ class GO:
         else: return 0
         
     def minimax_score(self,depth,is_maximizing,piece_type,alpha,beta):
-        if self.game_end(piece_type):    
+        if self.game_end(piece_type): #If game has ended
             winner = self.judge_winner()
             if winner == 1: #Black
                 return 100 
             elif winner == 2: #White
-                return - 100
-            elif winner == 0:
+                return -100
+            elif winner == 0: #Tie
                 return 0
             
         if is_maximizing: #Black Maximizes (1)
             best_score = -100000
             empty_spots = [(i,j) for i in range (5) for j in range(5)if board[i][j] == 0]
-            for spot in empty_spots:
-                if self.valid_place_check(spot[0],spot[1],1,True):
-                    board[spot[0]][spot[1]] = 1
-                    score = self.minimax_score(depth+1,False,2,alpha,beta)
-                    board[spot[0]][spot[1]] = 0
-                    best_score = max(score,best_score)
+            for spot in empty_spots: #For every empty spot
+                if self.valid_place_check(spot[0],spot[1],1,True): #If you can place a black piece here
+                    board[spot[0]][spot[1]] = 1 #Place it
+                    score = self.minimax_score(depth+1,False,2,alpha,beta) #Calculate score from placing it
+                    board[spot[0]][spot[1]] = 0 #Undo it
+                    best_score = max(score,best_score) #Maximize 
                     alpha = max(alpha,score)
                 if beta <= alpha:
                     break
@@ -361,12 +361,12 @@ class GO:
         else: #White Minimizes (2)
             best_score = 100000
             empty_spots = [(i,j) for i in range (5) for j in range(5)if board[i][j] == 0]
-            for spot in empty_spots:
-                if self.valid_place_check(spot[0],spot[1],2,True):
-                    board[spot[0]][spot[1]] = 2
-                    score = self.minimax_score(depth+1,True,1,alpha,beta)
-                    board[spot[0]][spot[1]] = 0
-                    best_score = min(score,best_score)
+            for spot in empty_spots: #For every empty spot
+                if self.valid_place_check(spot[0],spot[1],2,True): #If you can place a white piece here
+                    board[spot[0]][spot[1]] = 2 #Place it
+                    score = self.minimax_score(depth+1,True,1,alpha,beta) #Calculate score from placing it
+                    board[spot[0]][spot[1]] = 0 #Undo it
+                    best_score = min(score,best_score) #Minimize
                     beta = min(beta,score)
                 if beta <= alpha:
                     break
@@ -381,15 +381,15 @@ class GO:
         if not is_maximizing: #White Minimizes (2)
             best_score = 100000
             empty_spots = [(i,j) for i in range (5) for j in range(5)if board[i][j] == 0]
-            for spot in empty_spots:
-                if self.valid_place_check(spot[0],spot[1],2,True):
-                    board[spot[0]][spot[1]] = 2
-                    score = self.minimax_score(0,True,1,-100000,100000)
-                    board[spot[0]][spot[1]] = 0
+            for spot in empty_spots: #for every empty spot
+                if self.valid_place_check(spot[0],spot[1],2,True): #If you can place a white piece here
+                    board[spot[0]][spot[1]] = 2 #Place it
+                    score = self.minimax_score(0,True,1,-100000,100000) #Calculate score from placing it
+                    board[spot[0]][spot[1]] = 0 #Undo it
                     if score < best_score:
-                        best_score = score
+                        best_score = score #Keep track of best move and score
                         best_move = spot
-            pass_score = self.minimax_score(0,True,1,-100000,100000)
+            pass_score = self.minimax_score(0,True,1,-100000,100000) #Test passing 
             if pass_score < best_score:
                 best_score = pass_score
                 best_move = "PASS"
@@ -399,13 +399,13 @@ class GO:
             empty_spots = [(i,j) for i in range (5) for j in range(5)if board[i][j] == 0]
             for spot in empty_spots:
                 if self.valid_place_check(spot[0],spot[1],1,True):
-                    board[spot[0]][spot[1]] = 1
-                    score = self.minimax_score(0,False,2,-100000,100000)
-                    board[spot[0]][spot[1]] = 0
+                    board[spot[0]][spot[1]] = 1 #If you can place a black piece here
+                    score = self.minimax_score(0,False,2,-100000,100000) #Calculate score from placing it
+                    board[spot[0]][spot[1]] = 0 #Undo it
                     if score > best_score:
-                        best_score = score
+                        best_score = score #Keep track of best move and score 
                         best_move = spot
-            pass_score = self.minimax_score(0,False,2,-100000,100000)
+            pass_score = self.minimax_score(0,False,2,-100000,100000) #Test passing
             if pass_score > best_score:
                 best_score = pass_score
                 best_move = "PASS"
