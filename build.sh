@@ -41,22 +41,22 @@ surfix=".py"
 play()
 {    
     echo Clean up... >&2
-    if [ -f "input.txt" ]; then
-        rm input.txt
+    if [ -f $prefix/init/input.txt ]; then
+        rm $prefix/init/input.txt
     fi
-    if [ -f "output.txt" ]; then
-        rm output.txt
+    if [ -f $prefix/init/output.txt ]; then
+        rm $prefix/init/output.txt
     fi
-    cp $prefix/init/input.txt ./input.txt
+    cp $prefix/reset/input.txt $prefix/init/input.txt
 
     echo Start Playing... >&2
 
 	moves=0
 	while true
 	do
-        if [ -f "output.txt" ]; then
-	        rm output.txt
-	    fi
+        if [ -f $prefix/init/output.txt ]; then
+            rm $prefix/init/output.txt
+        fi
 
         echo "Black makes move..." >&2
 		eval "$1" >&2
@@ -69,9 +69,9 @@ play()
 			break
 		fi
 
-        if [ -f "output.txt" ]; then
-	        rm output.txt
-	    fi
+        if [ -f $prefix/init/output.txt ]; then
+            rm $prefix/init/output.txt
+        fi
 
 		echo "White makes move..." >&2
 		eval "$2" >&2
