@@ -1,5 +1,4 @@
 from copy import deepcopy
-import copy
 
 class GO:
     def __init__(self, n):
@@ -336,69 +335,6 @@ class GO:
         elif cnt_1 < cnt_2 + self.komi: return 2
         else: return 0
         
-    def play(self, player1, player2, verbose=False):
-        '''
-        The game starts!
-
-        :param player1: Player instance.
-        :param player2: Player instance.
-        :param verbose: whether print input hint and error information
-        :return: piece type of winner of the game (0 if it's a tie).
-        '''
-        self.init_board(self.size)
-        # Print input hints and error message if there is a manual player
-        if player1.type == 'manual' or player2.type == 'manual':
-            self.verbose = True
-            print('----------Input "exit" to exit the program----------')
-            print('X stands for black chess, O stands for white chess.')
-            self.visualize_board()
-        
-        verbose = self.verbose
-        # Game starts!
-        while 1:
-            piece_type = 1 if self.X_move else 2
-
-            # Judge if the game should end
-            if self.game_end(piece_type):       
-                result = self.judge_winner()
-                if verbose:
-                    print('Game ended.')
-                    if result == 0: 
-                        print('The game is a tie.')
-                    else: 
-                        print('The winner is {}'.format('X' if result == 1 else 'O'))
-                return result
-
-            if verbose:
-                player = "X" if piece_type == 1 else "O"
-                print(player + " makes move...")
-
-            # Game continues
-            if piece_type == 1: action = player1.get_input(self, piece_type)
-            else: action = player2.get_input(self, piece_type)
-
-            if verbose:
-                player = "X" if piece_type == 1 else "O"
-                print(action)
-
-            if action != "PASS":
-                # If invalid input, continue the loop. Else it places a chess on the board.
-                if not self.place_chess(action[0], action[1], piece_type):
-                    if verbose:
-                        self.visualize_board() 
-                    continue
-
-                self.died_pieces = self.remove_died_pieces(3 - piece_type) # Remove the dead pieces of opponent
-            else:
-                self.previous_board = deepcopy(self.board)
-
-            if verbose:
-                self.visualize_board() # Visualize the board again
-                print()
-
-            self.n_move += 1
-            self.X_move = not self.X_move # Players take turn
-    
     def minimax_score(self,depth,is_maximizing,piece_type,alpha,beta):
         if self.game_end(piece_type):    
             winner = self.judge_winner()
