@@ -444,8 +444,10 @@ class GO:
             is_maximizing = True
         else: #White
             is_maximizing = False
+            
         if not is_maximizing: #White Minimizes (2)
             best_score = 100000
+            best_move = "PASS"
             empty_spots = [(i,j) for i in range (5) for j in range(5)if board[i][j] == 0]
             for spot in empty_spots:
                 if self.valid_place_check(spot[0],spot[1],2,True):
@@ -462,6 +464,7 @@ class GO:
             return best_move
         else: #Black Maximizes (1)
             best_score = -100000
+            best_move = "PASS"
             empty_spots = [(i,j) for i in range (5) for j in range(5)if board[i][j] == 0]
             for spot in empty_spots:
                 if self.valid_place_check(spot[0],spot[1],1,True):
