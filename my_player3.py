@@ -404,9 +404,9 @@ class GO:
     
     def minimax_score(self,is_maximizing,piece_type,alpha,beta):
         winner = self.judge_winner()
-        if winner == 1:
+        if winner == 1: #Black
             return 100
-        elif winner == 2:
+        elif winner == 2: #White
             return -100
         elif winner == 0:
             return 0
@@ -444,7 +444,7 @@ class GO:
         else:
             is_maximizing = False
         if not is_maximizing:
-            best_score = 100_000
+            best_score = 100000
             empty_spots = [(i,j) for i in range (5) for j in range(5)if board[i][j] == 0]
             for spot in empty_spots:
                 if self.valid_place_check(spot[0],spot[1],piece_type,True):
@@ -460,7 +460,7 @@ class GO:
                 best_move = "PASS"
             return best_move
         else:
-            best_score = -100_000
+            best_score = -100000
             empty_spots = [(i,j) for i in range (5) for j in range(5)if board[i][j] == 0]
             for spot in empty_spots:
                 if self.valid_place_check(spot[0],spot[1],piece_type,True):
