@@ -398,17 +398,14 @@ class GO:
 
             self.n_move += 1
             self.X_move = not self.X_move # Players take turn
-
-    def copy_self(self):
-        return copy.deepcopy(self)
     
-    def minimax_score(self,is_maximizing,piece_type,alpha,beta):
+    def minimax_score(self,depth,is_maximizing,piece_type,alpha,beta):
         if self.game_end(piece_type):    
             winner = self.judge_winner()
             if winner == 1: #Black
-                return 100
+                return 100 
             elif winner == 2: #White
-                return -100
+                return - 100
             elif winner == 0:
                 return 0
             
@@ -417,9 +414,9 @@ class GO:
             empty_spots = [(i,j) for i in range (5) for j in range(5)if board[i][j] == 0]
             for spot in empty_spots:
                 if self.valid_place_check(spot[0],spot[1],1,True):
-                    copy_of_self = self.copy_self()
-                    copy_of_self.place_chess(spot[0],spot[1],1)
-                    score = copy_of_self.minimax_score(False,2,alpha,beta)
+                    board[spot[0]][spot[1]] = 1
+                    score = self.minimax_score(depth+1,False,2,alpha,beta)
+                    board[spot[0]][spot[1]] = 0
                     best_score = max(score,best_score)
                     alpha = max(alpha,score)
                     if beta <= alpha:
@@ -430,9 +427,9 @@ class GO:
             empty_spots = [(i,j) for i in range (5) for j in range(5)if board[i][j] == 0]
             for spot in empty_spots:
                 if self.valid_place_check(spot[0],spot[1],2,True):
-                    copy_of_self = self.copy_self()
-                    copy_of_self.place_chess(spot[0],spot[1],2)
-                    score = copy_of_self.minimax_score(True,1,alpha,beta)
+                    board[spot[0]][spot[1]] = 2
+                    score = self.minimax_score(depth+1,True,1,alpha,beta)
+                    board[spot[0]][spot[1]] = 0
                     best_score = min(score,best_score)
                     beta = min(beta,score)
                     if beta <= alpha:
@@ -447,34 +444,32 @@ class GO:
             
         if not is_maximizing: #White Minimizes (2)
             best_score = 100000
-            best_move = "PASS"
             empty_spots = [(i,j) for i in range (5) for j in range(5)if board[i][j] == 0]
             for spot in empty_spots:
                 if self.valid_place_check(spot[0],spot[1],2,True):
-                    copy_of_self = self.copy_self()
-                    copy_of_self.place_chess(spot[0],spot[1],2)
-                    score = copy_of_self.minimax_score(True,1,-100000,100000)
+                    board[spot[0]][spot[1]] = 2
+                    score = self.minimax_score(0,True,1,-100000,100000)
+                    board[spot[0]][spot[1]] = 0
                     if score < best_score:
                         best_score = score
                         best_move = spot
-            pass_score = self.minimax_score(True,1,-100000,100000)
+            pass_score = self.minimax_score(0,True,1,-100000,100000)
             if pass_score < best_score:
                 best_score = pass_score
                 best_move = "PASS"
             return best_move
         else: #Black Maximizes (1)
             best_score = -100000
-            best_move = "PASS"
             empty_spots = [(i,j) for i in range (5) for j in range(5)if board[i][j] == 0]
             for spot in empty_spots:
                 if self.valid_place_check(spot[0],spot[1],1,True):
-                    copy_of_self = self.copy_self()
-                    copy_of_self.place_chess(spot[0],spot[1],1)
-                    score = copy_of_self.minimax_score(False,2,-100000,100000)
+                    board[spot[0]][spot[1]] = 1
+                    score = self.minimax_score(0,False,2,-100000,100000)
+                    board[spot[0]][spot[1]] = 0
                     if score > best_score:
                         best_score = score
                         best_move = spot
-            pass_score = self.minimax_score(False,2,-100000,100000)
+            pass_score = self.minimax_score(0,False,2,-100000,100000)
             if pass_score > best_score:
                 best_score = pass_score
                 best_move = "PASS"
