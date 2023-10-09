@@ -355,8 +355,8 @@ class GO:
                     board[spot[0]][spot[1]] = 0
                     best_score = max(score,best_score)
                     alpha = max(alpha,score)
-                    if beta <= alpha:
-                        break
+                if beta <= alpha:
+                    break
             return best_score
         else: #White Minimizes (2)
             best_score = 100000
@@ -368,8 +368,8 @@ class GO:
                     board[spot[0]][spot[1]] = 0
                     best_score = min(score,best_score)
                     beta = min(beta,score)
-                    if beta <= alpha:
-                        break
+                if beta <= alpha:
+                    break
             return best_score
 
     def minimax_move(self,piece_type,previous_board,board):
