@@ -418,7 +418,7 @@ class GO:
                 if self.valid_place_check(spot[0],spot[1],piece_type,True):
                     copy_of_self = self.copy_self()
                     copy_of_self.place_chess(spot[0],spot[1],piece_type)
-                    score = copy_of_self.minimax_score(is_maximizing,piece_type,alpha,beta)
+                    score = copy_of_self.minimax_score(False,0,alpha,beta)
                     best_score = max(score,best_score)
                     alpha = max(alpha,score)
                     if beta <= alpha:
@@ -431,7 +431,7 @@ class GO:
                 if self.valid_place_check(spot[0],spot[1],piece_type,True):
                     copy_of_self = self.copy_self()
                     copy_of_self.place_chess(spot[0],spot[1],piece_type)
-                    score = copy_of_self.minimax_score(is_maximizing,piece_type,alpha,beta)
+                    score = copy_of_self.minimax_score(True,1,alpha,beta)
                     best_score = min(score,best_score)
                     beta = min(beta,score)
                     if beta <= alpha:
@@ -450,11 +450,11 @@ class GO:
                 if self.valid_place_check(spot[0],spot[1],piece_type,True):
                     copy_of_self = self.copy_self()
                     copy_of_self.place_chess(spot[0],spot[1],piece_type)
-                    score = copy_of_self.minimax_score(is_maximizing,piece_type,-100000,100000)
+                    score = copy_of_self.minimax_score(True,1,-100000,100000)
                     if score < best_score:
                         best_score = score
                         best_move = spot
-            pass_score = self.minimax_score(is_maximizing,piece_type,-100000,100000)
+            pass_score = self.minimax_score(True,1,-100000,100000)
             if pass_score < best_score:
                 best_score = pass_score
                 best_move = "PASS"
@@ -466,11 +466,11 @@ class GO:
                 if self.valid_place_check(spot[0],spot[1],piece_type,True):
                     copy_of_self = self.copy_self()
                     copy_of_self.place_chess(spot[0],spot[1],piece_type)
-                    score = copy_of_self.minimax_score(is_maximizing,piece_type,-100000,100000)
+                    score = copy_of_self.minimax_score(False,0,-100000,100000)
                     if score > best_score:
                         best_score = score
                         best_move = spot
-            pass_score = self.minimax_score(is_maximizing,piece_type,-100000,100000)
+            pass_score = self.minimax_score(False,0,-100000,100000)
             if pass_score > best_score:
                 best_score = pass_score
                 best_move = "PASS"
