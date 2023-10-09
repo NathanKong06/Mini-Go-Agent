@@ -403,14 +403,15 @@ class GO:
         return copy.deepcopy(self)
     
     def minimax_score(self,is_maximizing,piece_type,alpha,beta):
-        winner = self.judge_winner()
-        if winner == 1: #Black
-            return 100
-        elif winner == 2: #White
-            return -100
-        elif winner == 0:
-            return 0
-        
+        if self.game_end(piece_type):    
+            winner = self.judge_winner()
+            if winner == 1: #Black
+                return 100
+            elif winner == 2: #White
+                return -100
+            elif winner == 0:
+                return 0
+            
         if is_maximizing: #Black Maximizes (1)
             best_score = -100000
             empty_spots = [(i,j) for i in range (5) for j in range(5)if board[i][j] == 0]
@@ -423,7 +424,7 @@ class GO:
                     alpha = max(alpha,score)
                     if beta <= alpha:
                         break
-                return best_score
+            return best_score
         else: #White Minimizes (2)
             best_score = 100000
             empty_spots = [(i,j) for i in range (5) for j in range(5)if board[i][j] == 0]
@@ -436,7 +437,7 @@ class GO:
                     beta = min(beta,score)
                     if beta <= alpha:
                         break
-                return best_score
+            return best_score
 
     def minimax_move(self,piece_type,previous_board,board):
         if piece_type == 1: #Black
