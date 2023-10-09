@@ -142,16 +142,13 @@ do
     echo "You play as White Player | Win: $white_win_time | Lose: $((play_time/2-white_win_time-black_tie)) | Tie: $white_tie"
 done
 
-if [ -f "input.txt" ]; then
-    rm input.txt
+if [ -f $prefix/init/input.txt ]; then
+    rm $prefix/init/input.txt
 fi
-if [ -f "output.txt" ]; then
-    rm output.txt
+if [ -f $prefix/init/output.txt ]; then
+    rm $prefix/init/output.txt
 fi
                                       
-if [ -e "my_player.class" ]; then
-    rm *.class
-fi
 if [ -e "exe" ]; then
     rm exe
 fi
