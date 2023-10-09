@@ -335,6 +335,19 @@ class GO:
         elif cnt_1 < cnt_2 + self.komi: return 2
         else: return 0
         
+    def check_corners_first(self,available_spots):
+        if len(available_spots) == 0 or len(available_spots) == 1:
+            return available_spots
+        new_list = []
+        corners = [(0,0),(0,4),(4,0),(4,4)]
+        for corner in corners:
+            if corner in available_spots:
+                new_list.append(corner)
+        for spot in available_spots:
+            if spot not in corners:
+                new_list.append(spot)
+        return new_list
+
     def minimax_score(self,depth,is_maximizing,piece_type,alpha,beta):
         if self.game_end(piece_type): #If game has ended
             winner = self.judge_winner()
@@ -348,6 +361,7 @@ class GO:
         if is_maximizing: #Black Maximizes (1)
             best_score = -100000
             empty_spots = [(i,j) for i in range (5) for j in range(5)if board[i][j] == 0]
+            empty_spots = self.check_corners_first(empty_spots)
             for spot in empty_spots: #For every empty spot
                 if self.valid_place_check(spot[0],spot[1],1,True): #If you can place a black piece here
                     board[spot[0]][spot[1]] = 1 #Place it
@@ -361,6 +375,7 @@ class GO:
         else: #White Minimizes (2)
             best_score = 100000
             empty_spots = [(i,j) for i in range (5) for j in range(5)if board[i][j] == 0]
+            empty_spots = self.check_corners_first(empty_spots)
             for spot in empty_spots: #For every empty spot
                 if self.valid_place_check(spot[0],spot[1],2,True): #If you can place a white piece here
                     board[spot[0]][spot[1]] = 2 #Place it
@@ -381,6 +396,7 @@ class GO:
         if not is_maximizing: #White Minimizes (2)
             best_score = 100000
             empty_spots = [(i,j) for i in range (5) for j in range(5)if board[i][j] == 0]
+            empty_spots = self.check_corners_first(empty_spots)
             for spot in empty_spots: #for every empty spot
                 if self.valid_place_check(spot[0],spot[1],2,True): #If you can place a white piece here
                     board[spot[0]][spot[1]] = 2 #Place it
@@ -397,6 +413,7 @@ class GO:
         else: #Black Maximizes (1)
             best_score = -100000
             empty_spots = [(i,j) for i in range (5) for j in range(5)if board[i][j] == 0]
+            empty_spots = self.check_corners_first(empty_spots)
             for spot in empty_spots:
                 if self.valid_place_check(spot[0],spot[1],1,True):
                     board[spot[0]][spot[1]] = 1 #If you can place a black piece here
