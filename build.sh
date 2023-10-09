@@ -141,13 +141,6 @@ do
     echo "You play as Black Player | Win: $black_win_time | Lose: $((play_time/2-black_win_time-black_tie)) | Tie: $black_tie"
     echo "You play as White Player | Win: $white_win_time | Lose: $((play_time/2-white_win_time-black_tie)) | Tie: $white_tie"
 done
-
-if [ -f $prefix/init/input.txt ]; then
-    rm $prefix/init/input.txt
-fi
-if [ -f $prefix/init/output.txt ]; then
-    rm $prefix/init/output.txt
-fi
                                       
 if [ -e "exe" ]; then
     rm exe
