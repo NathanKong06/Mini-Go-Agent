@@ -349,7 +349,7 @@ class GO:
         return new_list
 
     def minimax_score(self,depth,is_maximizing,piece_type,alpha,beta):
-        if self.game_end(piece_type): #If game has ended, board is never checked
+        if self.game_end(piece_type): #If game has ended
             winner = self.judge_winner()
             if winner == 1: #Black
                 return 100 
@@ -364,11 +364,11 @@ class GO:
             empty_spots = self.check_corners_first(empty_spots)
             for spot in empty_spots: #For every empty spot
                 copy_self = self.copy_board()
-                self.place_chess(spot[0],spot[1],1)
-                score = self.minimax_score(depth+1,False,2,alpha,beta) #Calculate score from placing it
-                self = copy_self
-                best_score = max(score,best_score) #Maximize 
-                alpha = max(alpha,score)
+                if self.place_chess(spot[0],spot[1],1):
+                    score = self.minimax_score(depth+1,False,2,alpha,beta) #Calculate score from placing it
+                    self = copy_self
+                    best_score = max(score,best_score) #Maximize 
+                    alpha = max(alpha,score)
                 if beta <= alpha:
                     break
             return best_score
@@ -378,11 +378,11 @@ class GO:
             empty_spots = self.check_corners_first(empty_spots)
             for spot in empty_spots: #For every empty spot
                 copy_self = self.copy_board()
-                self.place_chess(spot[0],spot[1],2)
-                score = self.minimax_score(depth+1,True,1,alpha,beta) #Calculate score from placing it
-                self = copy_self
-                best_score = min(score,best_score) #Minimize
-                beta = min(beta,score)
+                if self.place_chess(spot[0],spot[1],2):
+                    score = self.minimax_score(depth+1,True,1,alpha,beta) #Calculate score from placing it
+                    self = copy_self
+                    best_score = min(score,best_score) #Minimize
+                    beta = min(beta,score)
                 if beta <= alpha:
                     break
             return best_score
@@ -399,12 +399,12 @@ class GO:
             empty_spots = self.check_corners_first(empty_spots)
             for spot in empty_spots: #for every empty spot
                 copy_self = self.copy_board()
-                self.place_chess(spot[0],spot[1],2)
-                score = self.minimax_score(0,True,1,-100000,100000) #Calculate score from placing it
-                self = copy_self
-                if score < best_score:
-                    best_score = score #Keep track of best move and score
-                    best_move = spot
+                if self.place_chess(spot[0],spot[1],2):
+                    score = self.minimax_score(0,True,1,-100000,100000) #Calculate score from placing it
+                    self = copy_self
+                    if score < best_score:
+                        best_score = score #Keep track of best move and score
+                        best_move = spot
             copy_self = self.copy_board()
             pass_score = self.minimax_score(0,True,1,-100000,100000) #Test passing 
             self = copy_self
@@ -418,12 +418,12 @@ class GO:
             empty_spots = self.check_corners_first(empty_spots)
             for spot in empty_spots:
                 copy_self = self.copy_board()
-                self.place_chess(spot[0],spot[1],1)
-                score = self.minimax_score(0,False,2,-100000,100000) #Calculate score from placing it
-                self = copy_self
-                if score > best_score:
-                    best_score = score #Keep track of best move and score 
-                    best_move = spot
+                if self.place_chess(spot[0],spot[1],1):
+                    score = self.minimax_score(0,False,2,-100000,100000) #Calculate score from placing it
+                    self = copy_self
+                    if score > best_score:
+                        best_score = score #Keep track of best move and score 
+                        best_move = spot
             copy_self = self.copy_board()
             pass_score = self.minimax_score(0,False,2,-100000,100000) #Test passing
             self = copy_self
