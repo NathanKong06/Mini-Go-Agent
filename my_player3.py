@@ -200,7 +200,7 @@ class GO:
         board[i][j] = piece_type
         self.update_board(board)
         # Remove the following line for HW2 CS561 S2020
-        # self.n_move += 1
+        self.n_move += 1
         return True
 
     def valid_place_check(self, i, j, piece_type, test_check=False):
@@ -409,8 +409,7 @@ class GO:
             pass_score = self.minimax_score(0,True,1,-100000,100000) #Test passing 
             self = copy_self
             if pass_score < best_score:
-                best_score = pass_score
-                best_move = "PASS"
+                return "PASS"
             return best_move
         else: #Black Maximizes (1)
             best_score = -100000
@@ -428,8 +427,7 @@ class GO:
             pass_score = self.minimax_score(0,False,2,-100000,100000) #Test passing
             self = copy_self
             if pass_score > best_score:
-                best_score = pass_score
-                best_move = "PASS"
+                return "PASS"
             return best_move
 
 def read_input(n, path="init/input.txt"):
