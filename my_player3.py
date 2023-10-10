@@ -360,31 +360,31 @@ class GO:
             
         if is_maximizing: #Black Maximizes (1)
             best_score = -100000
-            empty_spots = [(i,j) for i in range (5) for j in range(5)if board[i][j] == 0]
+            empty_spots = [(i,j) for i in range (5) for j in range(5)if self.board[i][j] == 0]
             empty_spots = self.check_corners_first(empty_spots)
+            copy_self = self.copy_board()
             for spot in empty_spots: #For every empty spot
-                copy_self = self.copy_board()
                 if self.place_chess(spot[0],spot[1],1):
                     score = self.minimax_score(depth+1,False,2,alpha,beta) #Calculate score from placing it
                     self = copy_self
                     best_score = max(score,best_score) #Maximize 
                     alpha = max(alpha,score)
-                if beta <= alpha:
-                    break
+                    if beta <= alpha:
+                        break
             return best_score
         else: #White Minimizes (2)
             best_score = 100000
-            empty_spots = [(i,j) for i in range (5) for j in range(5)if board[i][j] == 0]
+            empty_spots = [(i,j) for i in range (5) for j in range(5)if self.board[i][j] == 0]
             empty_spots = self.check_corners_first(empty_spots)
+            copy_self = self.copy_board()
             for spot in empty_spots: #For every empty spot
-                copy_self = self.copy_board()
                 if self.place_chess(spot[0],spot[1],2):
                     score = self.minimax_score(depth+1,True,1,alpha,beta) #Calculate score from placing it
                     self = copy_self
                     best_score = min(score,best_score) #Minimize
                     beta = min(beta,score)
-                if beta <= alpha:
-                    break
+                    if beta <= alpha:
+                        break
             return best_score
 
     def minimax_move(self,piece_type,board):
@@ -395,7 +395,7 @@ class GO:
             
         if not is_maximizing: #White Minimizes (2)
             best_score = 100000
-            empty_spots = [(i,j) for i in range (5) for j in range(5)if board[i][j] == 0]
+            empty_spots = [(i,j) for i in range (5) for j in range(5)if self.board[i][j] == 0]
             empty_spots = self.check_corners_first(empty_spots)
             for spot in empty_spots: #for every empty spot
                 copy_self = self.copy_board()
@@ -413,7 +413,7 @@ class GO:
             return best_move
         else: #Black Maximizes (1)
             best_score = -100000
-            empty_spots = [(i,j) for i in range (5) for j in range(5)if board[i][j] == 0]
+            empty_spots = [(i,j) for i in range (5) for j in range(5)if self.board[i][j] == 0]
             empty_spots = self.check_corners_first(empty_spots)
             for spot in empty_spots:
                 copy_self = self.copy_board()
