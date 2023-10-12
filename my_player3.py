@@ -196,12 +196,18 @@ class GO:
         valid_place = self.valid_place_check(i, j, piece_type)
         if not valid_place:
             return False
-        self.previous_board = deepcopy(board)
+        # self.previous_board = deepcopy(board)
         board[i][j] = piece_type
         self.update_board(board)
         # Remove the following line for HW2 CS561 S2020
         self.n_move += 1
         return True
+    
+    def unplace_chess(self,i,j):
+        board = self.board
+        board[i][j] = 0
+        self.update_board(board)
+        self.n_move -= 1
 
     def valid_place_check(self, i, j, piece_type, test_check=False):
         '''
@@ -368,6 +374,7 @@ class GO:
                     self.died_pieces = self.remove_died_pieces(3 - piece_type) 
                     value = max(value,self.minimax_decision(2,depth+1,alpha,beta))
                     #Undo Move
+                    self.unplace_chess(spot[0],spot[1])
                     alpha = max(alpha,value)
                     if alpha >= beta:
                         break
@@ -382,6 +389,7 @@ class GO:
                     self.died_pieces = self.remove_died_pieces(3 - piece_type) 
                     value = min(value,self.minimax_decision(1,depth+1,alpha,beta))
                     #Undo Move
+                    self.unplace_chess(spot[0],spot[1])
                     beta = min(beta,value)
                     if beta <= alpha:
                         break
@@ -401,6 +409,7 @@ class GO:
                     self.died_pieces = self.remove_died_pieces(3 - piece_type) 
                     value = self.minimax_decision(piece_type,0,-1000000,1000000)
                     #Undo Move
+                    self.unplace_chess(spot[0],spot[1])
                     if value > best_value:
                         best_value = value
                         best_move = spot
@@ -413,9 +422,11 @@ class GO:
             for spot in available_spots:
                 #Check for passing
                 if self.place_chess(spot[0],spot[1],2):
+                    print("Considering", spot)
                     self.died_pieces = self.remove_died_pieces(3 - piece_type) 
                     value = self.minimax_decision(piece_type,0,-1000000,1000000)
                     #Undo Move
+                    self.unplace_chess(spot[0],spot[1])
                     if value < best_value:
                         best_value = value
                         best_move = spot
