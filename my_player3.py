@@ -385,6 +385,32 @@ class GO:
         else:
             print("Error")
 
+    def minimax_move(self,piece_type):
+        if piece_type == 1: #Black Maximizes
+            best_value = -1000000
+            best_move = None
+            available_spots = [(i,j) for i in range (5) for j in range(5)if self.board[i][j] == 0]
+            available_spots = self.check_corners_first(available_spots)
+            for spot in available_spots:
+                if self.place_chess(spot[0],spot[1],1):
+                    value = self.minimax_decision(piece_type,0,-1000000,1000000)
+                    if value > best_value:
+                        best_value = value
+                        best_move = spot
+            return best_move
+        elif piece_type == 2: #White Minimizes
+            best_value = 1000000
+            best_move = None
+            available_spots = [(i,j) for i in range (5) for j in range(5)if self.board[i][j] == 0]
+            available_spots = self.check_corners_first(available_spots)
+            for spot in available_spots:
+                if self.place_chess(spot[0],spot[1],2):
+                    value = self.minimax_decision(piece_type,0,-1000000,1000000)
+                    if value < best_value:
+                        best_value = value
+                        best_move = spot
+            return best_move
+
 def read_input(n, path="init/input.txt"):
 
     with open(path, 'r') as f:
@@ -416,9 +442,8 @@ if __name__ == "__main__":
     go = GO(N)
     piece_type, previous_board, board = read_input(N) #Takes Input
     go.set_board(piece_type, previous_board, board)
-    next_move = go.minimax_decision(piece_type,0,-100000,100000) #Calculates next move
-    print(next_move)
-    # if next_move != "PASS": #Writes Output
-    #     write_output(next_move)
-    # else:
-    #     write_pass()
+    next_move = go.minimax_move(piece_type)
+    if next_move != "PASS": #Writes Output
+        write_output(next_move)
+    else:
+        write_pass()
