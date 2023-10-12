@@ -359,37 +359,37 @@ class GO:
                 return 0
         
         if piece_type == 1: #Black Maximizes
-            value = -1000000
-            available_spots = [(i,j) for i in range (5) for j in range(5) if self.board[i][j] == 0]
+            value = -1000000 #Low initial value
+            available_spots = [(i,j) for i in range (5) for j in range(5) if self.board[i][j] == 0] #Find all empty spots
             available_spots = self.check_corners_first(available_spots)
             for spot in available_spots:
-                copy_self = self.copy_board()
-                if self.place_chess(spot[0],spot[1],1):
-                    self.died_pieces = self.remove_died_pieces(3 - piece_type) 
-                    value = max(value,self.minimax_decision(2,depth+1,alpha,beta))
-                    self = copy_self
+                copy_self = self.copy_board() #Create copy at this moment
+                if self.place_chess(spot[0],spot[1],1): #Place piece if legal
+                    self.died_pieces = self.remove_died_pieces(3 - piece_type) #Remove all dead pieces from piece placement
+                    value = max(value,self.minimax_decision(2,depth+1,alpha,beta)) #Find value of this move
+                    self = copy_self #Undo the move by resetting state
                     alpha = max(alpha,value)
                     if alpha >= beta:
                         break
             copy_self = self.copy_board()
-            value = max(value,self.minimax_decision(2,depth+1,alpha,beta))
+            value = max(value,self.minimax_decision(2,depth+1,alpha,beta)) #Find value from passing
             self = copy_self
             return value
         elif piece_type == 2:
-            value = 1000000
-            available_spots = [(i,j) for i in range (5) for j in range(5) if self.board[i][j] == 0]
+            value = 1000000 #High intitial value
+            available_spots = [(i,j) for i in range (5) for j in range(5) if self.board[i][j] == 0] #Find all empty spots
             available_spots = self.check_corners_first(available_spots)
             for spot in available_spots:
-                copy_self = self.copy_board()
-                if self.place_chess(spot[0],spot[1],2):
-                    self.died_pieces = self.remove_died_pieces(3 - piece_type) 
-                    value = min(value,self.minimax_decision(1,depth+1,alpha,beta))
-                    self = copy_self
+                copy_self = self.copy_board() #Create copy at this moment
+                if self.place_chess(spot[0],spot[1],2): #Place piece if legal
+                    self.died_pieces = self.remove_died_pieces(3 - piece_type) #Remove all dead pieces from piece placement
+                    value = min(value,self.minimax_decision(1,depth+1,alpha,beta)) #Find value of this move
+                    self = copy_self #Undo the move by resetting state
                     beta = min(beta,value)
                     if beta <= alpha:
                         break
             copy_self = self.copy_board()
-            value = max(value,self.minimax_decision(2,depth+1,alpha,beta))
+            value = max(value,self.minimax_decision(2,depth+1,alpha,beta)) #Find value from passing
             self = copy_self
             return value
         else:
@@ -397,41 +397,41 @@ class GO:
 
     def minimax_move(self,piece_type):
         if piece_type == 1: #Black Maximizes
-            best_value = -1000000
+            best_value = -1000000 #Low intitial value
             best_move = None
-            available_spots = [(i,j) for i in range (5) for j in range(5) if self.board[i][j] == 0]
+            available_spots = [(i,j) for i in range (5) for j in range(5) if self.board[i][j] == 0] #Find all empty spots
             available_spots = self.check_corners_first(available_spots)
-            for spot in available_spots:
-                copy_self = self.copy_board()
-                if self.place_chess(spot[0],spot[1],1):
-                    self.died_pieces = self.remove_died_pieces(3 - piece_type) 
-                    value = self.minimax_decision(piece_type,0,-1000000,1000000)
-                    self = copy_self
-                    if value > best_value:
+            for spot in available_spots: 
+                copy_self = self.copy_board() #Create copy at this moment
+                if self.place_chess(spot[0],spot[1],1): #Place piece if legal
+                    self.died_pieces = self.remove_died_pieces(3 - piece_type) #Remove all dead pieces from piece placement
+                    value = self.minimax_decision(piece_type,0,-1000000,1000000) #Find value of this move
+                    self = copy_self #Undo the move by resetting state
+                    if value > best_value: #Keep track of best move
                         best_value = value
                         best_move = spot
             copy_self = self.copy_board()
-            value = self.minimax_decision(piece_type,0,-1000000,1000000)
+            value = self.minimax_decision(piece_type,0,-1000000,1000000)  #Find value from passing
             self = copy_self
             if value > best_value:
                 return "PASS"
             return best_move
         elif piece_type == 2: #White Minimizes
-            best_value = 1000000
+            best_value = 1000000 #High intitial value
             best_move = None
-            available_spots = [(i,j) for i in range (5) for j in range(5) if self.board[i][j] == 0]
+            available_spots = [(i,j) for i in range (5) for j in range(5) if self.board[i][j] == 0] #Find all empty spots
             available_spots = self.check_corners_first(available_spots)
             for spot in available_spots:
                 copy_self = self.copy_board()
-                if self.place_chess(spot[0],spot[1],2):
-                    self.died_pieces = self.remove_died_pieces(3 - piece_type) 
-                    value = self.minimax_decision(piece_type,0,-1000000,1000000)
-                    self = copy_self
-                    if value < best_value:
+                if self.place_chess(spot[0],spot[1],2): #Place piece if legal
+                    self.died_pieces = self.remove_died_pieces(3 - piece_type) #Remove all dead pieces from piece placement
+                    value = self.minimax_decision(piece_type,0,-1000000,1000000) #Find value of this move
+                    self = copy_self #Undo the move by resetting state
+                    if value < best_value: #Keep track of best move
                         best_value = value
                         best_move = spot
             copy_self = self.copy_board()
-            value = self.minimax_decision(piece_type,0,-1000000,1000000)
+            value = self.minimax_decision(piece_type,0,-1000000,1000000) #Find value from passing
             self = copy_self
             if value < best_value:
                 return "PASS"
