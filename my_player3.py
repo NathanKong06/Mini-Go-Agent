@@ -202,12 +202,6 @@ class GO:
         # Remove the following line for HW2 CS561 S2020
         self.n_move += 1
         return True
-    
-    def unplace_chess(self,i,j):
-        board = self.board
-        board[i][j] = 0
-        self.update_board(board)
-        self.n_move -= 1
 
     def valid_place_check(self, i, j, piece_type, test_check=False):
         '''
@@ -369,30 +363,34 @@ class GO:
             available_spots = [(i,j) for i in range (5) for j in range(5) if self.board[i][j] == 0]
             available_spots = self.check_corners_first(available_spots)
             for spot in available_spots:
-                #Check for passing
+                copy_self = self.copy_board()
                 if self.place_chess(spot[0],spot[1],1):
                     self.died_pieces = self.remove_died_pieces(3 - piece_type) 
                     value = max(value,self.minimax_decision(2,depth+1,alpha,beta))
-                    #Undo Move
-                    self.unplace_chess(spot[0],spot[1])
+                    self = copy_self
                     alpha = max(alpha,value)
                     if alpha >= beta:
                         break
+            copy_self = self.copy_board()
+            value = max(value,self.minimax_decision(2,depth+1,alpha,beta))
+            self = copy_self
             return value
         elif piece_type == 2:
             value = 1000000
             available_spots = [(i,j) for i in range (5) for j in range(5) if self.board[i][j] == 0]
             available_spots = self.check_corners_first(available_spots)
             for spot in available_spots:
-                #Check for passing
+                copy_self = self.copy_board()
                 if self.place_chess(spot[0],spot[1],2):
                     self.died_pieces = self.remove_died_pieces(3 - piece_type) 
                     value = min(value,self.minimax_decision(1,depth+1,alpha,beta))
-                    #Undo Move
-                    self.unplace_chess(spot[0],spot[1])
+                    self = copy_self
                     beta = min(beta,value)
                     if beta <= alpha:
                         break
+            copy_self = self.copy_board()
+            value = max(value,self.minimax_decision(2,depth+1,alpha,beta))
+            self = copy_self
             return value
         else:
             print("Error")
@@ -404,15 +402,19 @@ class GO:
             available_spots = [(i,j) for i in range (5) for j in range(5) if self.board[i][j] == 0]
             available_spots = self.check_corners_first(available_spots)
             for spot in available_spots:
-                #Check for passing
+                copy_self = self.copy_board()
                 if self.place_chess(spot[0],spot[1],1):
                     self.died_pieces = self.remove_died_pieces(3 - piece_type) 
                     value = self.minimax_decision(piece_type,0,-1000000,1000000)
-                    #Undo Move
-                    self.unplace_chess(spot[0],spot[1])
+                    self = copy_self
                     if value > best_value:
                         best_value = value
                         best_move = spot
+            copy_self = self.copy_board()
+            value = self.minimax_decision(piece_type,0,-1000000,1000000)
+            self = copy_self
+            if value > best_value:
+                return "PASS"
             return best_move
         elif piece_type == 2: #White Minimizes
             best_value = 1000000
@@ -420,16 +422,19 @@ class GO:
             available_spots = [(i,j) for i in range (5) for j in range(5) if self.board[i][j] == 0]
             available_spots = self.check_corners_first(available_spots)
             for spot in available_spots:
-                #Check for passing
+                copy_self = self.copy_board()
                 if self.place_chess(spot[0],spot[1],2):
-                    print("Considering", spot)
                     self.died_pieces = self.remove_died_pieces(3 - piece_type) 
                     value = self.minimax_decision(piece_type,0,-1000000,1000000)
-                    #Undo Move
-                    self.unplace_chess(spot[0],spot[1])
+                    self = copy_self
                     if value < best_value:
                         best_value = value
                         best_move = spot
+            copy_self = self.copy_board()
+            value = self.minimax_decision(piece_type,0,-1000000,1000000)
+            self = copy_self
+            if value < best_value:
+                return "PASS"
             return best_move
         else:
             print("Error")
