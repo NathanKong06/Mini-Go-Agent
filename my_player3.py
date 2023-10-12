@@ -360,11 +360,11 @@ class GO:
         
         if piece_type == 1: #Black Maximizes
             value = -1000000
-            available_spots = [(i,j) for i in range (5) for j in range(5)if self.board[i][j] == 0]
+            available_spots = [(i,j) for i in range (5) for j in range(5) if self.board[i][j] == 0]
             available_spots = self.check_corners_first(available_spots)
             for spot in available_spots:
                 if self.place_chess(spot[0],spot[1],1):
-                    # self.died_pieces = self.remove_died_pieces(3 - piece_type) 
+                    self.died_pieces = self.remove_died_pieces(3 - piece_type) 
                     value = max(value,self.minimax_decision(2,depth+1,alpha,beta))
                     alpha = max(alpha,value)
                     if alpha >= beta:
@@ -372,11 +372,11 @@ class GO:
             return value
         elif piece_type == 2:
             value = 1000000
-            available_spots = [(i,j) for i in range (5) for j in range(5)if self.board[i][j] == 0]
+            available_spots = [(i,j) for i in range (5) for j in range(5) if self.board[i][j] == 0]
             available_spots = self.check_corners_first(available_spots)
             for spot in available_spots:
                 if self.place_chess(spot[0],spot[1],2):
-                    # self.died_pieces = self.remove_died_pieces(3 - piece_type) 
+                    self.died_pieces = self.remove_died_pieces(3 - piece_type) 
                     value = min(value,self.minimax_decision(1,depth+1,alpha,beta))
                     beta = min(beta,value)
                     if beta <= alpha:
@@ -389,10 +389,11 @@ class GO:
         if piece_type == 1: #Black Maximizes
             best_value = -1000000
             best_move = None
-            available_spots = [(i,j) for i in range (5) for j in range(5)if self.board[i][j] == 0]
+            available_spots = [(i,j) for i in range (5) for j in range(5) if self.board[i][j] == 0]
             available_spots = self.check_corners_first(available_spots)
             for spot in available_spots:
                 if self.place_chess(spot[0],spot[1],1):
+                    self.died_pieces = self.remove_died_pieces(3 - piece_type) 
                     value = self.minimax_decision(piece_type,0,-1000000,1000000)
                     if value > best_value:
                         best_value = value
@@ -401,15 +402,18 @@ class GO:
         elif piece_type == 2: #White Minimizes
             best_value = 1000000
             best_move = None
-            available_spots = [(i,j) for i in range (5) for j in range(5)if self.board[i][j] == 0]
+            available_spots = [(i,j) for i in range (5) for j in range(5) if self.board[i][j] == 0]
             available_spots = self.check_corners_first(available_spots)
             for spot in available_spots:
                 if self.place_chess(spot[0],spot[1],2):
+                    self.died_pieces = self.remove_died_pieces(3 - piece_type) 
                     value = self.minimax_decision(piece_type,0,-1000000,1000000)
                     if value < best_value:
                         best_value = value
                         best_move = spot
             return best_move
+        else:
+            print("Error")
 
 def read_input(n, path="init/input.txt"):
 
