@@ -196,7 +196,7 @@ class GO:
         valid_place = self.valid_place_check(i, j, piece_type)
         if not valid_place:
             return False
-        # self.previous_board = deepcopy(board)
+        self.previous_board = deepcopy(board)
         board[i][j] = piece_type
         self.update_board(board)
         # Remove the following line for HW2 CS561 S2020
@@ -348,8 +348,8 @@ class GO:
                 new_list.append(spot)
         return new_list
 
-    def minimax_decision(self,piece_type, depth, alpha, beta):
-        if self.game_end(piece_type):
+    def minimax_decision(self,piece_type, depth, alpha, beta, move = "MOVE"):
+        if self.game_end(piece_type,move):
             winner = self.judge_winner()
             if winner == 1: #Black wins
                 return 100
@@ -372,7 +372,8 @@ class GO:
                     if alpha >= beta:
                         break
             copy_self = self.copy_board()
-            value = max(value,self.minimax_decision(2,depth+1,alpha,beta)) #Find value from passing
+            self.previous_board = deepcopy(self.board)
+            value = max(value,self.minimax_decision(2,depth+1,alpha,beta, "PASS")) #Find value from passing
             self = copy_self
             return value
         elif piece_type == 2:
@@ -389,7 +390,8 @@ class GO:
                     if beta <= alpha:
                         break
             copy_self = self.copy_board()
-            value = max(value,self.minimax_decision(2,depth+1,alpha,beta)) #Find value from passing
+            self.previous_board = deepcopy(self.board)
+            value = min(value,self.minimax_decision(1,depth+1,alpha,beta, "PASS")) #Find value from passing
             self = copy_self
             return value
         else:
@@ -411,7 +413,8 @@ class GO:
                         best_value = value
                         best_move = spot
             copy_self = self.copy_board()
-            value = self.minimax_decision(piece_type,0,-1000000,1000000)  #Find value from passing
+            self.previous_board = deepcopy(self.board)
+            value = self.minimax_decision(piece_type,0,-1000000,1000000, "PASS")  #Find value from passing
             self = copy_self
             if value > best_value:
                 return "PASS"
@@ -431,7 +434,8 @@ class GO:
                         best_value = value
                         best_move = spot
             copy_self = self.copy_board()
-            value = self.minimax_decision(piece_type,0,-1000000,1000000) #Find value from passing
+            self.previous_board = deepcopy(self.board)
+            value = self.minimax_decision(piece_type,0,-1000000,1000000, "PASS") #Find value from passing
             self = copy_self
             if value < best_value:
                 return "PASS"
