@@ -363,9 +363,11 @@ class GO:
             available_spots = [(i,j) for i in range (5) for j in range(5) if self.board[i][j] == 0]
             available_spots = self.check_corners_first(available_spots)
             for spot in available_spots:
+                #Check for passing
                 if self.place_chess(spot[0],spot[1],1):
                     self.died_pieces = self.remove_died_pieces(3 - piece_type) 
                     value = max(value,self.minimax_decision(2,depth+1,alpha,beta))
+                    #Undo Move
                     alpha = max(alpha,value)
                     if alpha >= beta:
                         break
@@ -375,9 +377,11 @@ class GO:
             available_spots = [(i,j) for i in range (5) for j in range(5) if self.board[i][j] == 0]
             available_spots = self.check_corners_first(available_spots)
             for spot in available_spots:
+                #Check for passing
                 if self.place_chess(spot[0],spot[1],2):
                     self.died_pieces = self.remove_died_pieces(3 - piece_type) 
                     value = min(value,self.minimax_decision(1,depth+1,alpha,beta))
+                    #Undo Move
                     beta = min(beta,value)
                     if beta <= alpha:
                         break
@@ -392,9 +396,11 @@ class GO:
             available_spots = [(i,j) for i in range (5) for j in range(5) if self.board[i][j] == 0]
             available_spots = self.check_corners_first(available_spots)
             for spot in available_spots:
+                #Check for passing
                 if self.place_chess(spot[0],spot[1],1):
                     self.died_pieces = self.remove_died_pieces(3 - piece_type) 
                     value = self.minimax_decision(piece_type,0,-1000000,1000000)
+                    #Undo Move
                     if value > best_value:
                         best_value = value
                         best_move = spot
@@ -405,9 +411,11 @@ class GO:
             available_spots = [(i,j) for i in range (5) for j in range(5) if self.board[i][j] == 0]
             available_spots = self.check_corners_first(available_spots)
             for spot in available_spots:
+                #Check for passing
                 if self.place_chess(spot[0],spot[1],2):
                     self.died_pieces = self.remove_died_pieces(3 - piece_type) 
                     value = self.minimax_decision(piece_type,0,-1000000,1000000)
+                    #Undo Move
                     if value < best_value:
                         best_value = value
                         best_move = spot
