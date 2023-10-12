@@ -348,87 +348,42 @@ class GO:
                 new_list.append(spot)
         return new_list
 
-    def minimax_score(self,depth,is_maximizing,piece_type,alpha,beta):
-        if self.game_end(piece_type): #If game has ended
+    def minimax_decision(self,piece_type, depth, alpha, beta):
+        if self.game_end(piece_type):
             winner = self.judge_winner()
-            if winner == 1: #Black
-                return 100 
-            elif winner == 2: #White
+            if winner == 1: #Black wins
+                return 100
+            elif winner == 2: #White wins
                 return -100
             elif winner == 0: #Tie
                 return 0
-            
-        if is_maximizing: #Black Maximizes (1)
-            best_score = -100000
-            empty_spots = [(i,j) for i in range (5) for j in range(5)if self.board[i][j] == 0]
-            empty_spots = self.check_corners_first(empty_spots)
-            copy_self = self.copy_board()
-            for spot in empty_spots: #For every empty spot
+        
+        if piece_type == 1: #Black Maximizes
+            value = -1000000
+            available_spots = [(i,j) for i in range (5) for j in range(5)if self.board[i][j] == 0]
+            available_spots = self.check_corners_first(available_spots)
+            for spot in available_spots:
                 if self.place_chess(spot[0],spot[1],1):
-                    score = self.minimax_score(depth+1,False,2,alpha,beta) #Calculate score from placing it
-                    self = copy_self
-                    best_score = max(score,best_score) #Maximize 
-                    alpha = max(alpha,score)
+                    # self.died_pieces = self.remove_died_pieces(3 - piece_type) 
+                    value = max(value,self.minimax_decision(2,depth+1,alpha,beta))
+                    alpha = max(alpha,value)
+                    if alpha >= beta:
+                        break
+            return value
+        elif piece_type == 2:
+            value = 1000000
+            available_spots = [(i,j) for i in range (5) for j in range(5)if self.board[i][j] == 0]
+            available_spots = self.check_corners_first(available_spots)
+            for spot in available_spots:
+                if self.place_chess(spot[0],spot[1],2):
+                    # self.died_pieces = self.remove_died_pieces(3 - piece_type) 
+                    value = min(value,self.minimax_decision(1,depth+1,alpha,beta))
+                    beta = min(beta,value)
                     if beta <= alpha:
                         break
-            return best_score
-        else: #White Minimizes (2)
-            best_score = 100000
-            empty_spots = [(i,j) for i in range (5) for j in range(5)if self.board[i][j] == 0]
-            empty_spots = self.check_corners_first(empty_spots)
-            copy_self = self.copy_board()
-            for spot in empty_spots: #For every empty spot
-                if self.place_chess(spot[0],spot[1],2):
-                    score = self.minimax_score(depth+1,True,1,alpha,beta) #Calculate score from placing it
-                    self = copy_self
-                    best_score = min(score,best_score) #Minimize
-                    beta = min(beta,score)
-                    if beta <= alpha:
-                        break
-            return best_score
-
-    def minimax_move(self,piece_type,board):
-        if piece_type == 1: #Black
-            is_maximizing = True
-        else: #White
-            is_maximizing = False
-            
-        if not is_maximizing: #White Minimizes (2)
-            best_score = 100000
-            empty_spots = [(i,j) for i in range (5) for j in range(5)if self.board[i][j] == 0]
-            empty_spots = self.check_corners_first(empty_spots)
-            for spot in empty_spots: #for every empty spot
-                copy_self = self.copy_board()
-                if self.place_chess(spot[0],spot[1],2):
-                    score = self.minimax_score(0,True,1,-100000,100000) #Calculate score from placing it
-                    self = copy_self
-                    if score < best_score:
-                        best_score = score #Keep track of best move and score
-                        best_move = spot
-            copy_self = self.copy_board()
-            pass_score = self.minimax_score(0,True,1,-100000,100000) #Test passing 
-            self = copy_self
-            if pass_score < best_score:
-                return "PASS"
-            return best_move
-        else: #Black Maximizes (1)
-            best_score = -100000
-            empty_spots = [(i,j) for i in range (5) for j in range(5)if self.board[i][j] == 0]
-            empty_spots = self.check_corners_first(empty_spots)
-            for spot in empty_spots:
-                copy_self = self.copy_board()
-                if self.place_chess(spot[0],spot[1],1):
-                    score = self.minimax_score(0,False,2,-100000,100000) #Calculate score from placing it
-                    self = copy_self
-                    if score > best_score:
-                        best_score = score #Keep track of best move and score 
-                        best_move = spot
-            copy_self = self.copy_board()
-            pass_score = self.minimax_score(0,False,2,-100000,100000) #Test passing
-            self = copy_self
-            if pass_score > best_score:
-                return "PASS"
-            return best_move
+            return value
+        else:
+            print("Error")
 
 def read_input(n, path="init/input.txt"):
 
@@ -461,8 +416,9 @@ if __name__ == "__main__":
     go = GO(N)
     piece_type, previous_board, board = read_input(N) #Takes Input
     go.set_board(piece_type, previous_board, board)
-    next_move = go.minimax_move(piece_type,board) #Calculates next move
-    if next_move != "PASS": #Writes Output
-        write_output(next_move)
-    else:
-        write_pass()
+    next_move = go.minimax_decision(piece_type,0,-100000,100000) #Calculates next move
+    print(next_move)
+    # if next_move != "PASS": #Writes Output
+    #     write_output(next_move)
+    # else:
+    #     write_pass()
