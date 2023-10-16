@@ -31,7 +31,7 @@ else
 	exit 1
 fi
 
-echo ""
+echo "" 
 
 prefix="./"
 ta_agent=("random_player") # 1 TA players
