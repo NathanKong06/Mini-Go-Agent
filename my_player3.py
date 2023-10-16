@@ -403,6 +403,8 @@ class GO:
             best_move = None
             available_spots = [(i,j) for i in range (5) for j in range(5) if self.board[i][j] == 0] #Find all empty spots
             available_spots = self.check_corners_first(available_spots)
+            if len(available_spots) == 1:
+                return (0,0)
             for spot in available_spots: 
                 copy_self = self.copy_board() #Create copy at this moment
                 if self.place_chess(spot[0],spot[1],1): #Place piece if legal
