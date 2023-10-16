@@ -407,14 +407,14 @@ class GO:
                 copy_self = self.copy_board() #Create copy at this moment
                 if self.place_chess(spot[0],spot[1],1): #Place piece if legal
                     self.died_pieces = self.remove_died_pieces(3 - piece_type) #Remove all dead pieces from piece placement
-                    value = self.minimax_decision(piece_type,0,-1000000,1000000) #Find value of this move
+                    value = self.minimax_decision(2,0,-1000000,1000000) #Find value of this move
                     self = copy_self #Undo the move by resetting state
                     if value > best_value: #Keep track of best move
                         best_value = value
                         best_move = spot
             copy_self = self.copy_board()
             self.previous_board = deepcopy(self.board)
-            value = self.minimax_decision(piece_type,0,-1000000,1000000, "PASS")  #Find value from passing
+            value = self.minimax_decision(2,0,-1000000,1000000, "PASS")  #Find value from passing
             self = copy_self
             if value > best_value:
                 return "PASS"
@@ -428,14 +428,14 @@ class GO:
                 copy_self = self.copy_board()
                 if self.place_chess(spot[0],spot[1],2): #Place piece if legal
                     self.died_pieces = self.remove_died_pieces(3 - piece_type) #Remove all dead pieces from piece placement
-                    value = self.minimax_decision(piece_type,0,-1000000,1000000) #Find value of this move
+                    value = self.minimax_decision(1,0,-1000000,1000000) #Find value of this move
                     self = copy_self #Undo the move by resetting state
                     if value < best_value: #Keep track of best move
                         best_value = value
                         best_move = spot
             copy_self = self.copy_board()
             self.previous_board = deepcopy(self.board)
-            value = self.minimax_decision(piece_type,0,-1000000,1000000, "PASS") #Find value from passing
+            value = self.minimax_decision(1,0,-1000000,1000000, "PASS") #Find value from passing
             self = copy_self
             if value < best_value:
                 return "PASS"
