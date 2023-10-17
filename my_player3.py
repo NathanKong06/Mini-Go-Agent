@@ -348,9 +348,46 @@ class GO:
                 new_list.append(spot)
         return new_list
 
+    def evaluate_position(self):
+        score_one = self.score(1)
+        score_two = self.score(2)
+        if score_one != 0:
+            cnt_1 = score_one + self.calculate_liberty(1)/score_one
+        else:
+            cnt_1 = score_one
+        if score_two != 0:
+            cnt_2 = score_two + self.calculate_liberty(2)/score_two
+        else:
+            cnt_2 = score_two
+        if cnt_1 > cnt_2: return 1
+        elif cnt_1 < cnt_2: return 2
+        else: return 0
+
+    def calculate_liberty(self,player):
+        liberty_value = 0
+        for row in range(5):
+            for column in range(5):
+                if self.board[row][column] == player:
+                    liberty_value += self.find_liberty_value(row,column)
+        return liberty_value
+    
+    def find_liberty_value(self,i,j):
+        board = self.board
+        score = 0
+        ally_members = self.ally_dfs(i, j)
+        for member in ally_members:
+            neighbors = self.detect_neighbor(member[0], member[1])
+            for piece in neighbors:
+                # If there is empty space around a piece, it has liberty
+                if board[piece[0]][piece[1]] == 0:
+                    score += 1
+        # If none of the pieces in a allied group has an empty space, it has no liberty
+        return score
+
     def minimax_decision(self,piece_type, depth, alpha, beta, move = "MOVE"):
-        if self.game_end(piece_type,move):
-            winner = self.judge_winner()
+        # if self.game_end(piece_type,move):
+        if depth == 4:
+            winner = self.evaluate_position()
             if winner == 1: #Black wins
                 return 100
             elif winner == 2: #White wins
@@ -403,7 +440,7 @@ class GO:
             best_move = None
             available_spots = [(i,j) for i in range (5) for j in range(5) if self.board[i][j] == 0] #Find all empty spots
             available_spots = self.check_corners_first(available_spots)
-            if len(available_spots) == 1:
+            if len(available_spots) == 9:
                 return (0,0)
             for spot in available_spots: 
                 copy_self = self.copy_board() #Create copy at this moment
