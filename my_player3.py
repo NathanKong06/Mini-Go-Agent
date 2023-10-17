@@ -349,16 +349,8 @@ class GO:
         return new_list
 
     def evaluate_position(self):
-        score_one = self.score(1)
-        score_two = self.score(2)
-        if score_one != 0:
-            cnt_1 = score_one + self.calculate_liberty(1)/score_one
-        else:
-            cnt_1 = score_one
-        if score_two != 0:
-            cnt_2 = score_two + self.calculate_liberty(2)/score_two
-        else:
-            cnt_2 = score_two
+        cnt_1 = self.score(1) + self.calculate_liberty(1)
+        cnt_2 = self.score(2) + self.calculate_liberty(2)
         if cnt_1 > cnt_2: return 1
         elif cnt_1 < cnt_2: return 2
         else: return 0
