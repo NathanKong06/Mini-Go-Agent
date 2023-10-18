@@ -351,9 +351,9 @@ class GO:
     def evaluate_position(self):
         cnt_1 = self.score(1) + self.calculate_liberty(1)
         cnt_2 = self.score(2) + self.calculate_liberty(2)
-        if cnt_1 > cnt_2: return 1
-        elif cnt_1 < cnt_2: return 2
-        else: return 0
+        if cnt_1 > cnt_2: return 1,cnt_1
+        elif cnt_1 < cnt_2: return 2,cnt_2
+        else: return 0,0
 
     def calculate_liberty(self,player):
         liberty_value = 0
@@ -379,11 +379,11 @@ class GO:
     def minimax_decision(self,piece_type, depth, alpha, beta, move = "MOVE"):
         # if self.game_end(piece_type,move):
         if depth == 4:
-            winner = self.evaluate_position()
+            winner,score = self.evaluate_position()
             if winner == 1: #Black wins
-                return 100
+                return score
             elif winner == 2: #White wins
-                return -100
+                return -score
             elif winner == 0: #Tie
                 return 0
         
