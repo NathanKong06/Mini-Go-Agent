@@ -377,7 +377,6 @@ class GO:
         return score
 
     def minimax_decision(self,piece_type, depth, alpha, beta, move = "MOVE"):
-        # if self.game_end(piece_type,move):
         if depth == 4:
             winner,score = self.evaluate_position()
             if winner == 1: #Black wins
