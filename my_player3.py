@@ -377,7 +377,7 @@ class GO:
         return score
 
     def minimax_decision(self,piece_type, depth, alpha, beta, move = "MOVE"):
-        if depth == 4:
+        if depth == 3:
             winner,score = self.evaluate_position()
             if winner == 1: #Black wins
                 return score
@@ -433,6 +433,11 @@ class GO:
             available_spots = self.check_corners_first(available_spots)
             if len(available_spots) == 25:
                 return (0,0)
+            if len(available_spots) == 23:
+                if (1,1) in available_spots:
+                    return (1,1)
+                else:
+                    return (1,0)
             for spot in available_spots: 
                 copy_self = self.copy_board() #Create copy at this moment
                 if self.place_chess(spot[0],spot[1],1): #Place piece if legal
@@ -454,6 +459,20 @@ class GO:
             best_move = None
             available_spots = [(i,j) for i in range (5) for j in range(5) if self.board[i][j] == 0] #Find all empty spots
             available_spots = self.check_corners_first(available_spots)
+            if len(available_spots) == 24:
+                if (0,0) in available_spots:
+                    return (0,0)
+                else:
+                    return (4,4)
+            elif len(available_spots) == 22:
+                if (0,4) in available_spots:
+                    return (0,4)
+                elif (4,0) in available_spots:
+                    return (4,0)
+                elif (4,4) in available_spots:
+                    return (4,4)
+                else:
+                    return (0,0)
             for spot in available_spots:
                 copy_self = self.copy_board()
                 if self.place_chess(spot[0],spot[1],2): #Place piece if legal
