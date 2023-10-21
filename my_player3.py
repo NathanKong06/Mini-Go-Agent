@@ -1,5 +1,7 @@
 from copy import deepcopy
 
+table = {}
+
 class GO:
     def __init__(self, n):
         """
@@ -302,11 +304,20 @@ class GO:
         return cnt          
 
     def evaluate_position(self):
+        val = lookup_table(self.board)
+        if val is not None:
+            return val
         cnt_1 = self.score(1) + self.calculate_liberty(1)
         cnt_2 = self.score(2) + self.calculate_liberty(2)
-        if cnt_1 > cnt_2: return 1,cnt_1
-        elif cnt_1 < cnt_2: return 2,cnt_2
-        else: return 0,0
+        if cnt_1 > cnt_2: 
+            insert_table(self.board,(1,cnt_1))
+            return 1,cnt_1
+        elif cnt_1 < cnt_2: 
+            insert_table(self.board,(2,cnt_2))
+            return 2,cnt_2
+        else: 
+            insert_table(self.board,(0,0))
+            return 0,0
 
     def calculate_liberty(self,player):
         liberty_value = 0
@@ -466,6 +477,16 @@ def write_output(result, path="init/output.txt"):
 def write_pass(path="init/output.txt"):
     with open(path, 'w') as f:
         f.write("PASS")
+
+def insert_table(state,value):
+    key = hash(tuple(tuple(row) for row in state))
+    table[key] = value
+
+def lookup_table(state):
+    key = hash(tuple(tuple(row) for row in state))
+    if key in table:
+        return table[key]
+    return None
 
 if __name__ == "__main__":
     N = 5
