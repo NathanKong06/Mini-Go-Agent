@@ -403,10 +403,10 @@ class GO:
             if len(available_spots) == 25:
                 return (0,0)
             if len(available_spots) == 23:
-                if (1,1) in available_spots and self.valid_place_check(1, 1, piece_type):
-                    return (1,1)
+                if (0,4) in available_spots and self.valid_place_check(0, 4, piece_type):
+                    return (0,4)
                 else:
-                    return (1,0)
+                    return (4,0)
             for spot in available_spots: 
                 copy_self = self.copy_board() #Create copy at this moment
                 if self.place_chess(spot[0],spot[1],1): #Place piece if legal
