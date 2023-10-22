@@ -403,7 +403,7 @@ class GO:
             if len(available_spots) == 25:
                 return (0,0)
             if len(available_spots) == 23:
-                if (1,1) in available_spots:
+                if (1,1) in available_spots and self.valid_place_check(1, 1, piece_type):
                     return (1,1)
                 else:
                     return (1,0)
@@ -433,11 +433,11 @@ class GO:
                 else:
                     return (4,4)
             elif len(available_spots) == 22:
-                if (0,4) in available_spots:
+                if (0,4) in available_spots and self.valid_place_check(0, 4, piece_type):
                     return (0,4)
-                elif (4,0) in available_spots:
+                elif (4,0) in available_spots and self.valid_place_check(4, 0, piece_type):
                     return (4,0)
-                elif (4,4) in available_spots:
+                elif (4,4) in available_spots and self.valid_place_check(4, 4, piece_type):
                     return (4,4)
                 else:
                     return (0,0)
