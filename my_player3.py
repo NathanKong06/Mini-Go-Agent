@@ -307,9 +307,17 @@ class GO:
         val = lookup_table(self.board)
         if val is not None:
             return val
-        cnt_1 = self.score(1) + self.calculate_liberty(1)
-        cnt_2 = self.score(2) + self.calculate_liberty(2)
-        if cnt_1 > cnt_2: 
+        score_1 = self.score(1)
+        score_2 = self.score(2)
+        if score_1 != 0:
+            cnt_1 = score_1 + self.calculate_liberty(1)/score_1 - score_2
+        else:
+            cnt_1 = -score_2
+        if score_2 != 0:
+            cnt_2 = score_2 + self.calculate_liberty(2)/score_2 - score_1
+        else:
+            cnt_2 = -score_1
+        if cnt_1 > cnt_2:
             insert_table(self.board,(1,cnt_1))
             return 1,cnt_1
         elif cnt_1 < cnt_2: 
