@@ -1,4 +1,5 @@
 from copy import deepcopy
+import time
 
 table = {}
 
@@ -348,6 +349,23 @@ class GO:
         # If none of the pieces in a allied group has an empty space, it has no liberty
         return score
 
+    def check_spots_first(self,available_spots):
+        if len(available_spots) == 0 or len(available_spots) == 1:
+            return available_spots
+        new_list = []
+        corners = [(0,0),(0,4),(4,0),(4,4)]
+        sides = [(0,1),(0,2),(0,3),(1,0),(2,0),(3,0),(1,4),(2,4),(3,4),(4,1),(4,2),(4,3)]
+        for spot in available_spots:
+            if spot not in corners and spot not in sides:
+                new_list.append(spot)
+        for side in sides:
+            if side in available_spots:
+                new_list.append(side)
+        for corner in corners:
+            if corner in available_spots:
+                new_list.append(corner)
+        return new_list
+    
     def minimax_decision(self,piece_type, depth, alpha, beta, move = "MOVE"):
         if depth == 3:
             winner,score = self.evaluate_position()
@@ -361,6 +379,7 @@ class GO:
         if piece_type == 1: #Black Maximizes
             value = -1000000 #Low initial value
             available_spots = [(i,j) for i in range (5) for j in range(5) if self.board[i][j] == 0] #Find all empty spots
+            available_spots = self.check_spots_first(available_spots)
             for spot in available_spots:
                 copy_self = self.copy_board() #Create copy at this moment
                 if self.place_chess(spot[0],spot[1],1): #Place piece if legal
@@ -378,6 +397,7 @@ class GO:
         elif piece_type == 2:
             value = 1000000 #High intitial value
             available_spots = [(i,j) for i in range (5) for j in range(5) if self.board[i][j] == 0] #Find all empty spots
+            available_spots = self.check_spots_first(available_spots)
             for spot in available_spots:
                 copy_self = self.copy_board() #Create copy at this moment
                 if self.place_chess(spot[0],spot[1],2): #Place piece if legal
@@ -407,6 +427,7 @@ class GO:
                     return (0,4)
                 else:
                     return (4,0)
+            available_spots = self.check_spots_first(available_spots)
             for spot in available_spots: 
                 copy_self = self.copy_board() #Create copy at this moment
                 if self.place_chess(spot[0],spot[1],1): #Place piece if legal
@@ -441,6 +462,7 @@ class GO:
                     return (4,4)
                 else:
                     return (0,0)
+            available_spots = self.check_spots_first(available_spots)
             for spot in available_spots:
                 copy_self = self.copy_board()
                 if self.place_chess(spot[0],spot[1],2): #Place piece if legal
