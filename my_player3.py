@@ -421,11 +421,6 @@ class GO:
             available_spots = [(i,j) for i in range (5) for j in range(5) if self.board[i][j] == 0] #Find all empty spots
             if len(available_spots) == 25:
                 return (0,0)
-            if len(available_spots) == 23:
-                if (0,4) in available_spots and self.valid_place_check(0, 4, piece_type):
-                    return (0,4)
-                else:
-                    return (4,0)
             available_spots = self.check_spots_first(available_spots)
             for spot in available_spots: 
                 copy_self = self.copy_board() #Create copy at this moment
@@ -447,20 +442,6 @@ class GO:
             best_value = 1000000 #High intitial value
             best_move = None
             available_spots = [(i,j) for i in range (5) for j in range(5) if self.board[i][j] == 0] #Find all empty spots
-            if len(available_spots) == 24:
-                if (0,0) in available_spots:
-                    return (0,0)
-                else:
-                    return (4,4)
-            elif len(available_spots) == 22:
-                if (0,4) in available_spots and self.valid_place_check(0, 4, piece_type):
-                    return (0,4)
-                elif (4,0) in available_spots and self.valid_place_check(4, 0, piece_type):
-                    return (4,0)
-                elif (4,4) in available_spots and self.valid_place_check(4, 4, piece_type):
-                    return (4,4)
-                else:
-                    return (0,0)
             available_spots = self.check_spots_first(available_spots)
             for spot in available_spots:
                 copy_self = self.copy_board()
